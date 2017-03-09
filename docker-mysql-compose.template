@@ -1,0 +1,31 @@
+version: '3'
+services:
+  
+  portal:
+    build: 
+      context: ../../
+      dockerfile: ./images/liferay/Dockerfile
+      args:
+          image_path: ./images/liferay/${liferay_version}/${liferay_sp}/${liferay_fp}
+          data_path: ./instances/${instance}/portal_files
+    ports:
+      - "8080:8080"
+    image: ${liferay_version}:${instance}
+    depends_on:
+     - mysql
+
+  mysql:
+    build: 
+      context: ../../
+      dockerfile: ./images/mysql/Dockerfile
+      args:
+        data_path:
+          "./instances/${instance}/sql_files"
+    environment:
+      - MYSQL_ROOT_PASSWORD=liferay
+      - MYSQL_DATABASE=lportal
+      - character-set-server=utf8mb4
+      - collation-server=utf8mb4_unicode_ci
+    ports:
+      - "6306:3306"
+    command: --lower_case_table_names=1
