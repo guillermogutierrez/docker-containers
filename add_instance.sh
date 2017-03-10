@@ -30,11 +30,10 @@ while [ "$1" != "" ]; do
     shift
 done
 
-echo $instance " " $version " " $service_pack " " $fix_pack
-
 mkdir -p ./instances/$instance/{sql_files,portal_files/{libs,data,deploy,config}}
 
 cp 	./docker-compose.template ./instances/$instance/docker-compose.yml 
+cp 	./images/aux/create-schema.sql ./instances/$instance/sql_files/ 
 
 case $database in
 	mysql )
@@ -43,6 +42,9 @@ case $database in
 		;;
 	* )
 		sed -e "s/\${liferay_version}/$version/" -e "s/\${liferay_sp}/$service_pack/" -e "s/\${instance}/$instance/" -e "s/\${liferay_fp}/$fix_pack/" ./docker-compose.template > ./instances/$instance/docker-compose.yml 
+		# At least one jar needs to be present, if not built will fails as docker doen't allow conditional buildings
 		cp ./images/aux/empty.jar ./instances/$instance/portal_files/libs/
 		;;
 esac
+
+echo $instance " " $version " " $service_pack " " $fix_pack
