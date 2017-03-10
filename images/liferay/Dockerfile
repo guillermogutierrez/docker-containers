@@ -1,9 +1,11 @@
-FROM mdelapenya/jdk:8-openjdk
+FROM openjdk:8
 MAINTAINER Guillermo Gutierrez <guillermo.gutierrez@liferay.com>
 
 ARG image_path
 ARG data_path
 ARG license_path
+
+RUN bash -c 'echo -e Building a Liferay portal using the image  $image_path  the data from  $data_path  and the license ß$license_path'
 
 # Install minimal dependencies
 RUN apt-get update \
@@ -35,7 +37,7 @@ WORKDIR /usr/local
 COPY $image_path/liferay-bundle.zip $LIFERAY_HOME
 
 # Copy any additional required jar
-COPY $data_path/libs/* $LIFERAY_HOME/docker_temp/lib/ext
+COPY $data_path/libs/* $LIFERAY_HOME/docker_temp/lib/ext/
 
 # Bundle and libraries installation
 RUN unzip -q $LIFERAY_HOME/liferay-bundle.zip -d $LIFERAY_HOME\
