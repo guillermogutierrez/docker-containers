@@ -1,0 +1,11 @@
+portal:
+  build: 
+    context: ../../
+    dockerfile: ./images/liferay/Dockerfile
+    args:
+        image_path: ./images/liferay/bundles/${liferay_version}/${liferay_sp}/${liferay_fp}
+        data_path: ./instances/${instance}/portal_files
+        license_path: ./images/liferay/bundles/${liferay_version}
+  ports:
+    - "8080:8080"
+  image: ${liferay_version}:${instance}
