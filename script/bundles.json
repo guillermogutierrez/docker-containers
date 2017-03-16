@@ -1,0 +1,40 @@
+{
+	"bundles":[ 
+		{	
+			"name" : "dxp",
+			"servicepack" :[
+				{
+					"name" : "sp1",
+					"fixpack" :[
+						{
+							"name" : "fp12",
+							"url": ""
+						},
+						{
+							"name" : "fp13",
+							"url": ""
+						}
+					]
+				}
+			]
+		},
+    	{
+    		"name" : "62_ee",
+    		"servicepack" :[
+    			{
+					"name" : "sp18",    
+					"fixpack" :[
+						{
+							"name" : "fp138",
+							"url": "http://downloads.liferay.com/4UAJL6097NW66"
+						},    
+						{
+							"name" : "fp139",
+							"url": "/portal/6.2.10.19/liferay-portal-tomcat-6.2-ee-sp18-20170306151705459.zip"
+						}
+					]
+				}
+			]
+   		}
+   	]
+}
