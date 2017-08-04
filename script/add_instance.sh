@@ -49,22 +49,23 @@ servicePackIndex=$((servicePackIndex-1))
 service_pack=`getServicePackName $versionIndex $servicePackIndex`
 
 #Fix Pack
-printMenuAndInput "Available fix packs" `getFixPacks $versionIndex $servicePackIndex` "Select the fix pack to use: "  fixPackIndex
-fixPackIndex=$((fixPackIndex-1))
-fix_pack=`getFixPackName $versionIndex $servicePackIndex $fixPackIndex`
+#printMenuAndInput "Available fix packs" `getFixPacks $versionIndex $servicePackIndex` "Select the fix pack to use: "  fixPackIndex
+#fixPackIndex=$((fixPackIndex-1))
+#fix_pack=`getFixPackName $versionIndex $servicePackIndex $fixPackIndex`
 
-if [ ! -d "$liferay_path/bundles/$version/$service_pack/$fix_pack" ]; then
-    mkdir -p $liferay_path/bundles/$version/$service_pack/$fix_pack
-    bundleUrl=`./jq-osx-amd64 -r .bundles[$versionIndex].servicepack[$servicePackIndex].fixpack[$fixPackIndex].url ./bundles.json`
-    printAction "Downloading bundle from $bundleUrl"
+if [ ! -d "$liferay_path/bundles/$version/$service_pack" ]; then
+    mkdir -p $liferay_path/bundles/$version/$service_pack
+    bundleUrl=`./jq-osx-amd64 -r .bundles[$versionIndex].servicepack[$servicePackIndex].url ./bundles.json`
+    printAction "Downloading bundle from $download_base_url$bundleUrl"
     curl -X POST -u $credentials "$download_base_url$bundleUrl" -D ./headers.txt
     url=($(cat ./headers.txt | grep Location: | cut -d ':' -f3))
     rm ./headers.txt
-    curl -o "$liferay_path/bundles/$version/$service_pack/$fix_pack/bundle.zip" "http:${url%$'\r'}"
+    curl -o "$liferay_path/bundles/$version/$service_pack/liferay-bundle.zip" "http:${url%$'\r'}"
 fi
 
 #Summary
-printAction "Selected bundle $version - $service_pack - $fix_pack"
+#printAction "Selected bundle $version - $service_pack - $fix_pack"
+printAction "Selected bundle $version - $service_pack"
 
 mkdir -p $instance_path/{sql_files,portal_files/{libs,data,deploy,config}}
 
@@ -76,31 +77,32 @@ read -p "Select the database to use: "  database
 printMenu "Available backups" `ls -d $backups_folder/* | rev | cut -f1 -d '/' | rev`
 read -p "Select the backup to use: "  backup
 
-cp 	$BASEDIR/docker-compose.template $instance_path/docker-compose.template 
-cp 	$database_path/sql/create_schema.sql $instance_path/sql_files/create-schema.sql 
+cp  $BASEDIR/docker-compose.template $instance_path/docker-compose.template 
+cp  $database_path/sql/create_schema.sql $instance_path/sql_files/create-schema.sql 
 cp  $liferay_path/config/portal-setup-wizard.properties $instance_path/portal_files/config/portal-setup-wizard.properties
 
 case $database in
-	mysql )
-		sed -e "s/\${liferay_version}/$version/" -e "s/\${liferay_sp}/$service_pack/" -e "s/\${instance}/$instance/" -e "s/\${liferay_fp}/$fix_pack/" $BASEDIR/docker-mysql-compose.template > $instance_path/docker-compose.yml 
-		cp $database_path/mysql/drivers/mysql.jar                      $instance_path/portal_files/libs/
+    mysql )
+        sed -e "s/\${liferay_version}/$version/" -e "s/\${liferay_sp}/$service_pack/" -e "s/\${instance}/$instance/" -e "s/\${liferay_fp}/$fix_pack/" $BASEDIR/docker-mysql-compose.template > $instance_path/docker-compose.yml 
+        cp $database_path/mysql/drivers/mysql.jar                      $instance_path/portal_files/libs/
         cp $database_path/mysql/config/portal-setup-wizard.properties  $instance_path/portal_files/config/portal-setup-wizard.properties
-		;;
-	* )
-		sed -e "s/\${liferay_version}/$version/" -e "s/\${liferay_sp}/$service_pack/" -e "s/\${instance}/$instance/" -e "s/\${liferay_fp}/$fix_pack/" $BASEDIR/docker-compose.template > $instance_path/docker-compose.yml 
-		# At least one jar needs to be present, if not built will fails as docker doen't allow conditional buildings
-		cp $BASEDIR/images/aux/empty.jar $instance_path/portal_files/libs/
-		;;
+        ;;
+    * )
+        sed -e "s/\${liferay_version}/$version/" -e "s/\${liferay_sp}/$service_pack/" -e "s/\${instance}/$instance/" -e "s/\${liferay_fp}/$fix_pack/" $BASEDIR/docker-compose.template > $instance_path/docker-compose.yml 
+        # At least one jar needs to be present, if not built will fails as docker doen't allow conditional buildings
+        cp $BASEDIR/images/aux/empty.jar $instance_path/portal_files/libs/
+        ;;
 esac
 
 if [ ! -z "$backup" ] ; then
     cp -r   $backups_folder/$backup/data/*           $instance_path/portal_files/data
     cp      $backups_folder/$backup/sql/*            $instance_path/sql_files/
-    cp      $backups_folder/$backup/portal_config/*  $instance_path/portal_files/config/
+    cp      $backups_folder/$backup/portal_config/*  $instance_path/portal_files/config/    
+    cp      $backups_folder/$backup/plugins/*        $instance_path/portal_files/deploy/ 
 fi
+echo $backups_folder/$backup/plugins
+printAction "$instance: $version-$service_pack-$fix_pack has been created"
 
-echo $instance " " $version " " $service_pack " " $fix_pack " has been created"
-
-echo "Building docker images"
+printAction "Building docker images"
 
 docker-compose -f $instance_path/docker-compose.yml up -d

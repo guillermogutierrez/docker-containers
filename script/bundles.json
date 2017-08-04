@@ -5,16 +5,21 @@
 			"servicepack" :[
 				{
 					"name" : "sp1",
-					"fixpack" :[
-						{
-							"name" : "fp12",
-							"url": ""
-						},
-						{
-							"name" : "fp13",
-							"url": ""
-						}
-					]
+					"url": "/portal/7.0.10.1/liferay-dxp-digital-enterprise-tomcat-7.0-sp1-20161027112321352.zip"								
+				},
+				{
+					"name" : "sp2",
+					"url": "/portal/7.0.10.2/liferay-dxp-digital-enterprise-tomcat-7.0-sp2-20170317165321327.zip"
+				}
+				,
+				{
+					"name" : "sp3",
+					"url": "/portal/7.0.10.3/liferay-dxp-digital-enterprise-tomcat-7.0-sp3-20170503123037723.zip"
+				}
+                ,
+				{
+					"name" : "sp4",
+					"url": "/portal/7.0.10.4/liferay-dxp-digital-enterprise-tomcat-7.0-sp4-20170705142422877.zip"
 				}
 			]
 		},
@@ -23,18 +28,10 @@
     		"servicepack" :[
     			{
 					"name" : "sp18",    
-					"fixpack" :[
-						{
-							"name" : "fp138",
-							"url": "http://downloads.liferay.com/4UAJL6097NW66"
-						},    
-						{
-							"name" : "fp139",
-							"url": "/portal/6.2.10.19/liferay-portal-tomcat-6.2-ee-sp18-20170306151705459.zip"
-						}
-					]
+					"url": "/portal/6.2.10.19/liferay-portal-tomcat-6.2-ee-sp18-20170306151705459.zip"
 				}
 			]
    		}
    	]
 }
+

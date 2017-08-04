@@ -10,8 +10,8 @@ services:
           data_path: ./instances/${instance}/portal_files
           license_path: ./images/liferay/bundles/${liferay_version}
     ports:
-      - "8080:8080"
-    image: ${liferay_version}:${instance}
+      - "8081:8080"
+    image: ${instance}:${liferay_version}
     depends_on:
      - mysql
 

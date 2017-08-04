@@ -1,1 +1,1 @@
-credentials=
+credentials=<USER>:<PASSWORD>

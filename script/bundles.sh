@@ -22,10 +22,10 @@ function getServicePackName {
 	parseJsonValue .bundles[$1].servicepack[$2].name
 }
 
-function getFixPacks {
-	parseJson .bundles[$1].servicepack[$2].fixpack[].name
-}
+#function getFixPacks {
+#	parseJson .bundles[$1].servicepack[$2].fixpack[].name
+#}
 
-function getFixPackName {
-	parseJsonValue .bundles[$1].servicepack[$2].fixpack[$3].name
-}
+#function getFixPackName {
+#	parseJsonValue .bundles[$1].servicepack[$2].fixpack[$3].name
+#}

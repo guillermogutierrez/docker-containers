@@ -32,6 +32,7 @@ function loadPlugins {
 		userInput "Select the plugins to add (0 to end): "  input_plugin
 
 		while [ "$input_plugin" != "0" ]; do
+			input_plugin=$((input_plugin-1))
 		  	plugins_to_deploy+=(${plugins[$input_plugin]})
 			read  input_plugin
 		done
